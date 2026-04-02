@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>A Special Question for TISHA 💖</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Playfair+Display:ital,wght@1,700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  
+  <!-- Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #ff4d79;
+      --primary-hover: #ff1a53;
+      --bg-gradient-1: #ffe6f0;
+      --bg-gradient-2: #ffccdd;
+      --text: #333333;
+      --card-bg: rgba(255, 255, 255, 0.85);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      color: var(--text);
+      position: relative;
+    }
+
+    /* Floating background hearts */
+    .bg-heart {
+      position: absolute;
+      font-size: 24px;
+      color: rgba(255, 77, 121, 0.2);
+      animation: floatUp 10s linear infinite;
+      z-index: 0;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.5) rotate(360deg); opacity: 0; }
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .card {
+      position: relative;
+      z-index: 10;
+      width: min(500px, 92vw);
+      padding: 40px 30px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(255, 77, 121, 0.15), 
+                  inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .image-container {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(255, 77, 121, 0.2);
+      border: 4px solid white;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 42px);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--primary);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    p.subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .button-container {
+      position: relative;
+      min-height: 60px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    button {
+      padding: 14px 32px;
+      font-size: 18px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      touch-action: none;
+      z-index: 20;
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: white;
+      min-width: 120px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #yesBtn:hover {
+      box-shadow: 0 15px 25px rgba(255, 77, 121, 0.4);
+    }
+
+    #noBtn {
+      background: white;
+      color: var(--text);
+      min-width: 100px;
+    }
+
+    .message {
+      margin-top: 25px;
+      height: 24px;
+      font-size: 16px;
+      color: var(--primary);
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .success-view {
+      display: none;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .success-view h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 6vw, 50px);
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .success-view p {
+      font-size: 20px;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .love-letter {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(255, 230, 240, 0.6);
+      border-radius: 15px;
+      border: 2px dashed var(--primary);
+    }
+
+    .love-letter p {
+      font-family: 'Caveat', cursive;
+      font-size: 28px;
+      color: var(--primary);
+      line-height: 1.4;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .dudu-bubu-img {
+      width: 150px;
+      border-radius: 20px;
+      margin-top: 15px;
+      box-shadow: 0 10px 20px rgba(255, 77, 121, 0.15);
+    }
+
+  </style>
+</head>
+<body>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="card" id="mainCard">
+    <div id="askView">
+      <div class="image-container">
+        <!-- Cute animated peach bear asking -->
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjRzMXR2OW5pOTBnNWdwaGhtZXQwbnExMzNxOWZtOXQybnk4MjMzeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VzQ9PUdifClRm/giphy.gif" alt="Cute Bear Asking">
+      </div>
+      
+      <h1>Hey TISHA,</h1>
+      <p class="subtitle">Will you go on a date with me? 🥺</p>
+      
+      <div class="button-container" id="buttonContainer">
+        <button id="yesBtn">YES! 💖</button>
+        <button id="noBtn">No</button>
+      </div>
+      
+      <div class="message" id="teaseMessage">Are you sure about that? 👀</div>
+    </div>
+
+    <div class="success-view" id="successView">
+      
+      <h2>YAYYY! 🎉</h2>
+      
+      <div class="love-letter">
+        <p>
+          I LOVE YOU TISHA BABU <br>
+          LETS GO ON A DATE AND ENJOY
+        </p>
+      </div>
+
+      <!-- Cute Dudu Bubu Image -->
+      <img src="https://media1.tenor.com/m/ZhmAq1E_x5AAAAAC/bubu-dudu-bubu.gif" alt="Dudu Bubu Couple" class="dudu-bubu-img" referrerpolicy="no-referrer">
+
+    </div>
+  </div>
+
+  <script>
+    // Create floating hearts background
+    function createHearts() {
+      const hearts = ['❤️', '💖', '💕', '💘', '💝', '✨'];
+      for(let i=0; i<25; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'bg-heart';
+        heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        heart.style.animationDelay = (Math.random() * 5) + 's';
+        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+        document.body.appendChild(heart);
+      }
+    }
+    createHearts();
+
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const container = document.getElementById('buttonContainer');
+    const teaseMessage = document.getElementById('teaseMessage');
+    
+    const messages = [
+      "Are you sure? 👀", 
+      "Think again! 🤔", 
+      "Don't do this to me! 💔", 
+      "I'm giving you another chance! 🥺",
+      "You're breaking my heart! 😭",
+      "Just click Yes already! 🙄",
+      "Nice try! 😉",
+      "Nope, not letting you! 🏃‍♂️💨",
+      "You literally can't say No! 😌",
+      "Okay fine, I give up holding it... but just click YES! 💖"
+    ];
+    let dodgeCount = 0;
+    let yesScale = 1;
+    let lastDodge = 0;
+
+    // Movement logic for "No" button
+    function dodgeButton() {
+      const now = Date.now();
+      if (now - lastDodge < 150) return; // Prevent double-trigger from touch+click
+      lastDodge = now;
+
+      // Limit to 5 tries
+      if (dodgeCount >= 5) {
+        noBtn.style.display = 'none';
+        teaseMessage.innerText = "There's no escape now! Just click YES! 🥰";
+        return;
+      }
+
+      noBtn.style.position = 'fixed'; // Switch to fixed so it's relative to viewport
+      
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      
+      // Calculate random positions bounded by screen size safely
+      const btnRect = noBtn.getBoundingClientRect();
+      const maxX = Math.max(0, vw - btnRect.width - 20);
+      const maxY = Math.max(0, vh - btnRect.height - 20);
+      
+      // Let it go anywhere on the screen!
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      
+      noBtn.style.left = randomX + 'px';
+      noBtn.style.top = randomY + 'px';
+      
+      // Update tease message
+      teaseMessage.innerText = messages[Math.min(dodgeCount, messages.length - 1)];
+      teaseMessage.style.opacity = 1;
+      
+      // Make Yes button bigger and adjust its styling slightly
+      yesScale += 0.2;
+      yesBtn.style.transform = `scale(${Math.min(yesScale, 2.5)})`;
+      
+      if (yesScale > 1.5) {
+        yesBtn.innerText = "JUST SAY YES! 💖";
+      }
+
+      dodgeCount++;
+    }
+
+    // Trigger dodge on hover (desktop) or touch (mobile)
+    noBtn.addEventListener('mouseover', dodgeButton);
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // Prevent accidental click on mobile
+      dodgeButton();
+    });
+    // Just in case they manage to click it somehow
+    noBtn.addEventListener('click', dodgeButton);
+
+
+    /* Confetti Logic */
+    const canvas = document.getElementById('confettiCanvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    function fireConfetti() {
+      const duration = 5000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 7,
+          angle: 60,
+          spread: 60,
+          origin: { x: 0 },
+          colors: ['#ff4d79', '#ffccdd', '#ffffff', '#ff1a53']
+        });
+        confetti({
+          particleCount: 7,
+          angle: 120,
+          spread: 60,
+          origin: { x: 1 },
+          colors: ['#ff4d79', '#ffccdd', '#ffffff', '#ff1a53']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    /* Yes Button Logic */
+    yesBtn.addEventListener('click', () => {
+      document.getElementById('askView').style.display = 'none';
+      document.getElementById('successView').style.display = 'block';
+      noBtn.style.display = 'none'; // Hide the stray no button
+      fireConfetti();
+    });
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+  </script>
+</body>
+</html>
